@@ -21,3 +21,17 @@ npm test
 ```sh
 npm run storybook
 ```
+
+## Quick Look into the application
+
+### Main page
+
+!["Appointments List"](docs/app-list.png)
+
+### Create Appointment Form
+
+!["Appointment Creation"](docs/create-app.png)
+
+### List of days with available spots
+
+<img width="50%" src="docs/day-list.png" alt="Days List">
