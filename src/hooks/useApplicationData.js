@@ -10,19 +10,8 @@ const useApplicationData = () => {
   });
 
   function bookInterview(id, interview) {
-    let newDay;
     let days = [];
-
-    for (let d in state.days) {
-      if (state.days[d].name === state.day) {
-        newDay = { ...state.days[d] };
-        newDay.spots--;
-        days.push(newDay);
-      } else {
-        days.push(state.days[d]);
-      }
-    }
-
+    let spots = 0;
     const appointment = {
       ...state.appointments[id],
       interview: { ...interview },
@@ -33,26 +22,29 @@ const useApplicationData = () => {
       [id]: appointment,
     };
 
-    return axios.put(`/api/appointments/${id}`, { interview }).then(() =>
+    for (let d in state.days) {
+      let newDay = { ...state.days[d] };
+      for (let day of newDay.appointments) {
+        if (appointments[day].interview === null) {
+          spots++;
+        }
+      }
+      newDay.spots = spots;
+      days.push(newDay);
+      spots = 0;
+    }
+
+    return axios.put(`/api/appointments/${id}`, { interview }).then(() => {
       setState((prev) => {
         return { ...prev, days, appointments };
-      })
-    );
+      });
+    });
   }
 
   function cancelInterview(id) {
-    let newDay;
     let days = [];
+    let spots = 0;
 
-    for (let d in state.days) {
-      if (state.days[d].name === state.day) {
-        newDay = { ...state.days[d] };
-        newDay.spots++;
-        days.push(newDay);
-      } else {
-        days.push(state.days[d]);
-      }
-    }
     const appointment = {
       ...state.appointments[id],
       interview: null,
@@ -61,6 +53,18 @@ const useApplicationData = () => {
       ...state.appointments,
       [id]: appointment,
     };
+
+    for (let d in state.days) {
+      let newDay = { ...state.days[d] };
+      for (let day of newDay.appointments) {
+        if (appointments[day].interview === null) {
+          spots++;
+        }
+      }
+      newDay.spots = spots;
+      days.push(newDay);
+      spots = 0;
+    }
 
     return axios.delete(`/api/appointments/${id}`).then(() =>
       setState((prev) => {

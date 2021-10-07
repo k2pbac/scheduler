@@ -26,6 +26,7 @@ export default function DayListItem(props) {
       onClick={props.onClick}
       spots={props.spots}
       selected={props.selected}
+      data-testid="day"
     >
       <h2 className="text--regular">{props.name}</h2>
       <h3 className="text--light">{formatSpots()}</h3>
