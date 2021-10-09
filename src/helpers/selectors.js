@@ -29,12 +29,10 @@ export function getInterviewersForDay(state, day) {
 }
 
 export function getInterview(state, interview) {
-  const obj = interview
+  return interview
     ? {
         student: interview.student,
         interviewer: { ...state.interviewers[interview.interviewer] },
       }
     : null;
-
-  return obj;
 }

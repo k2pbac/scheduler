@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 
 const useApplicationData = () => {
-  const [state, setState] = useState({
+  const [appointmentState, setAppointmentState] = useState({
     day: "Monday",
     days: [],
     appointments: {},
@@ -13,17 +13,17 @@ const useApplicationData = () => {
     let days = [];
     let spots = 0;
     const appointment = {
-      ...state.appointments[id],
+      ...appointmentState.appointments[id],
       interview: { ...interview },
     };
 
     const appointments = {
-      ...state.appointments,
+      ...appointmentState.appointments,
       [id]: appointment,
     };
 
-    for (let d in state.days) {
-      let newDay = { ...state.days[d] };
+    for (let d in appointmentState.days) {
+      let newDay = { ...appointmentState.days[d] };
       for (let day of newDay.appointments) {
         if (appointments[day].interview === null) {
           spots++;
@@ -35,7 +35,7 @@ const useApplicationData = () => {
     }
 
     return axios.put(`/api/appointments/${id}`, { interview }).then(() => {
-      setState((prev) => {
+      setAppointmentState((prev) => {
         return { ...prev, days, appointments };
       });
     });
@@ -46,16 +46,16 @@ const useApplicationData = () => {
     let spots = 0;
 
     const appointment = {
-      ...state.appointments[id],
+      ...appointmentState.appointments[id],
       interview: null,
     };
     const appointments = {
-      ...state.appointments,
+      ...appointmentState.appointments,
       [id]: appointment,
     };
 
-    for (let d in state.days) {
-      let newDay = { ...state.days[d] };
+    for (let d in appointmentState.days) {
+      let newDay = { ...appointmentState.days[d] };
       for (let day of newDay.appointments) {
         if (appointments[day].interview === null) {
           spots++;
@@ -67,13 +67,13 @@ const useApplicationData = () => {
     }
 
     return axios.delete(`/api/appointments/${id}`).then(() =>
-      setState((prev) => {
+      setAppointmentState((prev) => {
         return { ...prev, days, appointments };
       })
     );
   }
 
-  const setDay = (day) => setState({ ...state, day });
+  const setDay = (day) => setAppointmentState({ ...appointmentState, day });
 
   useEffect(() => {
     Promise.all([
@@ -82,17 +82,17 @@ const useApplicationData = () => {
       axios.get("/api/interviewers"),
     ]).then((all) => {
       const [first, second, third] = all;
-      setState({
-        ...state,
+      setAppointmentState({
+        ...appointmentState,
         days: first.data,
         appointments: second.data,
         interviewers: third.data,
       });
     });
-  }, []);
+  }, [appointmentState]);
 
   return {
-    state,
+    appointmentState,
     setDay,
     bookInterview,
     cancelInterview,

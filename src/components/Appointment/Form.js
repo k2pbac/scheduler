@@ -3,27 +3,31 @@ import InterviewerList from "components/InterviewerList";
 import Button from "components/Button";
 
 const Form = (props) => {
-  const { name, interviewers, value, onChange, onCancel, onSave } = props;
-  const [_name, setName] = useState(name || "");
+  const { name, interviewers, value, onCancel, onSave } = props;
+  const [studentName, setStudentName] = useState(name || "");
   const [interviewer, setInterviewer] = useState(value || null);
   const [error, setError] = useState("");
   const changeHandler = (event) => {
-    setName(event.target.value);
+    setStudentName(event.target.value);
   };
 
   const resetForm = () => {
-    setName("");
+    setStudentName("");
     setInterviewer(null);
     onCancel();
   };
 
   function validate() {
-    if (_name === "") {
+    if (studentName === "") {
       setError("Student name cannot be blank");
+      return;
+    } else if (interviewer === null) {
+      setError("Interviewer cannot be blank");
       return;
     }
     setError("");
-    onSave(_name, interviewer);
+
+    onSave(studentName, interviewer);
   }
   return (
     <main className="appointment__card appointment__card--create">
@@ -33,7 +37,7 @@ const Form = (props) => {
             className="appointment__create-input text--semi-bold"
             name="name"
             type="text"
-            value={_name}
+            value={studentName}
             placeholder="Enter Student Name"
             onChange={changeHandler}
             data-testid="student-name-input"
