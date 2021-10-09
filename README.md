@@ -1,8 +1,18 @@
 # Interview Scheduler
 
+## Description
+
+Interview Scheduler is an interactive React application in which a user can book or cancel interviews. The application keeps track of which timeslots have been already booked so there are no conflicts.
+
 ## Setup
 
 Install dependencies with `npm install`.
+
+## Required Project Dependencies
+
+- axios
+- @testing-library/react-hooks
+- react-test-renderer
 
 ## Running Webpack Development Server
 
